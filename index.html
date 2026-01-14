@@ -11,58 +11,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
     
     <style>
-        /* styles unchanged */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1 class="name">Saimum Ahmed<span>.</span></h1>
-            <p class="tagline">Builder. Connector. Strategist.</p>
-        </header>
+        :root {
+            --color-bg: #0a0a0a;
+            --color-text: #e8e6e3;
+            --color-text-muted: #8a8a8a;
+            --color-accent: #c9a227;
+            --color-card: #141414;
+            --color-border: #2a2a2a;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
 
-        <main>
-            <section>
-                <h2 class="section-title">About</h2>
-                <div class="about-text">
-                    <p>Hello! I’m Saimum, based out of NYC.</p>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-                    <p>I help people control how they show up on Google and use AI to reduce operational drag.</p>
+        html {
+            scroll-behavior: smooth;
+        }
 
-                    <p>My background spans blockchain, DeFi, and internet marketing. I stay close to platform shifts that actually change outcomes. When something works, I move fast. When it doesn’t, I ignore it.</p>
-
-                    <p>Outside of work, I’m into anime, Marvel vs. DC debates, geopolitics, and tracking down rare Pokémon. I’m also the kind of person who commits long-term: over two years, I lost 82 pounds by sticking to consistency over motivation. That same mindset carries into my work with clients—clear process, steady execution, no shortcuts.</p>
-
-                    <p>Online presence is leverage. I help people treat it that way.</p>
-
-                    <p>If you want to collaborate, work together, or just follow my journey, connect with me on Instagram or LinkedIn.</p>
-                </div>
-            </section>
-
-            <section>
-                <h2 class="section-title">Connect</h2>
-                <div class="links-grid">
-                    <a href="https://www.linkedin.com/in/saimum-ahmed" target="_blank" class="link-item">
-                        <span class="link-name">LinkedIn</span>
-                        <span class="link-arrow">→</span>
-                    </a>
-                    <a href="https://www.instagram.com/simon.cola" target="_blank" class="link-item">
-                        <span class="link-name">Instagram</span>
-                        <span class="link-arrow">→</span>
-                    </a>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div class="footer-content">
-                <span class="copyright">© 2025 Saimum Ahmed</span>
-                <span class="location">
-                    <span class="location-dot"></span>
-                    NYC
-                </span>
-            </div>
-        </footer>
-    </div>
-</body>
-</html>
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            lin
