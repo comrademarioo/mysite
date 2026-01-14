@@ -36,4 +36,214 @@
             font-family: var(--font-body);
             background-color: var(--color-bg);
             color: var(--color-text);
-            lin
+            line-height: 1.6;
+            font-weight: 300;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 48px 0 32px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .name {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .name span {
+            color: var(--color-accent);
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--color-text-muted);
+            font-weight: 300;
+        }
+
+        main {
+            padding: 48px 0;
+        }
+
+        section {
+            margin-bottom: 64px;
+            animation: fadeUp 0.8s ease-out both;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .about-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        .about-text p {
+            margin-bottom: 1.25rem;
+        }
+
+        .about-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .links-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            border-color: var(--color-accent);
+            transform: translateX(8px);
+        }
+
+        .link-item:hover .link-arrow {
+            transform: translateX(4px);
+            color: var(--color-accent);
+        }
+
+        .link-arrow {
+            color: var(--color-text-muted);
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+        }
+
+        footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--color-border);
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .location-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="name">Saimum Ahmed<span>.</span></h1>
+            <p class="tagline">Builder. Connector. Strategist.</p>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="section-title">About</h2>
+                <div class="about-text">
+                    <p>Hello! I’m Saimum, based out of NYC.</p>
+
+                    <p>I help people control how they show up on Google and use AI to reduce operational drag.</p>
+
+                    <p>My background spans blockchain, DeFi, and internet marketing. I stay close to platform shifts that actually change outcomes. When something works, I move fast. When it doesn’t, I ignore it.</p>
+
+                    <p>Outside of work, I’m into anime, Marvel vs. DC debates, geopolitics, and tracking down rare Pokémon. I’m also the kind of person who commits long-term: over two years, I lost 82 pounds by sticking to consistency over motivation. That same mindset carries into my work with clients—clear process, steady execution, no shortcuts.</p>
+
+                    <p>Online presence is leverage. I help people treat it that way.</p>
+
+                    <p>If you want to collaborate, work together, or just follow my journey, connect with me on Instagram or LinkedIn.</p>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Connect</h2>
+                <div class="links-grid">
+                    <a href="https://www.linkedin.com/in/saimum-ahmed" target="_blank" class="link-item">
+                        <span>LinkedIn</span>
+                        <span class="link-arrow">→</span>
+                    </a>
+                    <a href="https://www.instagram.com/simon.cola" target="_blank" class="link-item">
+                        <span>Instagram</span>
+                        <span class="link-arrow">→</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <span>© 2025 Saimum Ahmed</span>
+                <span class="location">
+                    <span class="location-dot"></span>
+                    NYC
+                </span>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
