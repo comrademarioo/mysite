@@ -1,0 +1,9 @@
+{
+  "_comment": "Season re-seeded yearly. 2026-27 rosters; tiers verified against press coverage July 2026.",
+  "passes": [
+    {"slug": "epic", "name": "Epic Pass", "season": "2026-27"},
+    {"slug": "ikon", "name": "Ikon Pass", "season": "2026-27"},
+    {"slug": "indy", "name": "Indy Pass", "season": "2026-27"},
+    {"slug": "mountain-collective", "name": "Mountain Collective", "season": "2026-27"}
+  ]
+}

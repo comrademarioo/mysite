@@ -1,0 +1,43 @@
+// Computed titles/descriptions/JSON-LD. Unique per page, from data only.
+import { SITE, SEASON, mToFt, fmt } from './data.mjs';
+
+export function pageMeta({ title, description, path }) {
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE}${path}` }, // self-referencing canonical
+    openGraph: { title, description, url: `${SITE}${path}`, siteName: 'Skivio' },
+  };
+}
+
+export function resortMeta(r) {
+  const bits = [];
+  if (r.vertical_m) bits.push(`${fmt(mToFt(r.vertical_m))} ft vertical`);
+  if (r.lifts_total) bits.push(`${r.lifts_total} lifts`);
+  if (r.runs_total) bits.push(`${r.runs_total} runs`);
+  return pageMeta({
+    title: `${r.name} Ski Resort — Stats, Terrain & Pass Coverage`,
+    description: `${r.name} (${r.region}, ${r.country}): ${bits.join(', ')}. Terrain split, elevation, ${SEASON()} pass coverage, and head-to-head comparisons.`,
+    path: `/resort/${r.slug}`,
+  });
+}
+
+export function vsMeta(a, b, key) {
+  return pageMeta({
+    title: `${a.name} vs ${b.name}: Stats, Terrain, and Which Pass Covers Them`,
+    description: `${a.name} or ${b.name}? Side-by-side vertical, lifts, runs, terrain split, and ${SEASON()} pass coverage to settle it with numbers.`,
+    path: `/vs/${key}`,
+  });
+}
+
+// SkiResort structured data (schema.org) for resort pages.
+export function skiResortJsonLd(r) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SkiResort',
+    name: r.name,
+    url: `${SITE}/resort/${r.slug}`,
+    address: { '@type': 'PostalAddress', addressRegion: r.region, addressCountry: r.country },
+    geo: { '@type': 'GeoCoordinates', latitude: r.lat, longitude: r.lng },
+  };
+}

@@ -1,0 +1,27 @@
+{
+  "name": "skivio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "skivio.org — programmatic SEO site for ski resorts: entities × modifiers, static generation from Postgres.",
+  "scripts": {
+    "ingest:wikidata": "node pipeline/01-wikidata-pull.mjs",
+    "ingest:openskimap": "node pipeline/02-openskimap-enrich.mjs",
+    "ingest:passes": "node pipeline/03-pass-rosters.mjs",
+    "ingest:seed": "node pipeline/load-seed.mjs",
+    "score": "node pipeline/04-score-and-floor.mjs",
+    "snapshot": "node pipeline/05-export-snapshot.mjs",
+    "pipeline:seed": "npm run ingest:seed && npm run score && npm run snapshot",
+    "pipeline:full": "npm run ingest:wikidata && npm run ingest:openskimap && npm run ingest:passes && npm run score && npm run snapshot",
+    "dev": "next dev",
+    "build": "next build",
+    "audit": "node scripts/audit.mjs"
+  },
+  "dependencies": {
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "pg": "^8.13.0"
+  }
+}

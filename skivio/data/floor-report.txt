@@ -1,0 +1,33 @@
+=== Skivio floor report ===
+data_score distribution: 5:257
+resort pages (score>=3):        257
+vs pages (both>=4, same region/pass, alphabetical): 5351
+geo hub pages (>=3 qualifying): 25
+pass hub pages:                 4 (indy:62, ikon:52, epic:42, mountain-collective:24)
+
+Geo hubs:
+  United States / Colorado: 23
+  United States / California: 19
+  Canada / British Columbia: 16
+  United States / New Hampshire: 15
+  United States / Pennsylvania: 15
+  United States / Vermont: 15
+  United States / Utah: 14
+  United States / New York: 14
+  United States / Idaho: 11
+  United States / Michigan: 10
+  Canada / Quebec: 10
+  United States / Montana: 10
+  United States / New Mexico: 8
+  United States / Washington: 8
+  United States / Oregon: 7
+  Canada / Alberta: 6
+  United States / Maine: 6
+  United States / Minnesota: 6
+  United States / Wisconsin: 6
+  United States / Massachusetts: 5
+  United States / North Carolina: 4
+  United States / West Virginia: 4
+  United States / Virginia: 3
+  United States / Wyoming: 3
+  Canada / Ontario: 3

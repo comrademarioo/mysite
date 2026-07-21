@@ -1,0 +1,10 @@
+# deps / build
+node_modules/
+.next/
+out/
+
+# pipeline caches (large downloads; regenerated)
+data/ski_areas.geojson
+
+# env
+.env*
