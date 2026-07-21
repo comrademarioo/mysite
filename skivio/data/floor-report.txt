@@ -1,33 +1,85 @@
 === Skivio floor report ===
-data_score distribution: 5:257
-resort pages (score>=3):        257
-vs pages (both>=4, same region/pass, alphabetical): 5351
-geo hub pages (>=3 qualifying): 25
-pass hub pages:                 4 (indy:62, ikon:52, epic:42, mountain-collective:24)
+data_score distribution: 5:315  4:600  3:23  2:28  1:23  0:331
+resort pages (score>=3):        761
+vs pages (both>=4, same region/pass, alphabetical): 6066
+geo hub pages (>=3 qualifying): 77
+pass hub pages:                 4 (indy:138, ikon:89, epic:42, mountain-collective:21)
 
 Geo hubs:
-  United States / Colorado: 23
-  United States / California: 19
-  Canada / British Columbia: 16
-  United States / New Hampshire: 15
-  United States / Vermont: 15
-  United States / Pennsylvania: 15
+  Japan / Nagano Prefecture: 50
+  Canada / British Columbia: 29
+  Japan / Niigata Prefecture: 28
+  United States / Colorado: 27
+  Canada / Quebec: 26
+  United States / California: 25
+  United States / Idaho: 21
+  Japan / Hokkaido Prefecture: 21
+  United States / New Hampshire: 20
+  United States / Vermont: 19
+  United States / Pennsylvania: 19
+  United States / Michigan: 18
+  Japan / Gunma Prefecture: 18
+  United States / New York: 16
+  United States / Washington: 16
+  France / Savoie: 15
+  Canada / Ontario: 15
+  United States / Maine: 14
   United States / Utah: 14
-  United States / New York: 14
-  United States / Idaho: 11
-  United States / Montana: 10
-  United States / Michigan: 10
-  Canada / Quebec: 10
-  United States / Washington: 8
-  United States / New Mexico: 8
-  United States / Oregon: 7
-  United States / Maine: 6
-  Canada / Alberta: 6
-  United States / Wisconsin: 6
-  United States / Minnesota: 6
-  United States / Massachusetts: 5
+  United States / Montana: 13
+  Austria / Salzburg: 12
+  France / Haute-Savoie: 12
+  United States / Oregon: 11
+  United States / Wisconsin: 11
+  Austria / Tyrol: 11
+  Canada / Alberta: 11
+  Austria / Styria: 11
+  United States / Massachusetts: 10
+  Japan / Akita Prefecture: 10
+  United States / Minnesota: 10
+  United States / New Mexico: 9
+  France / Hautes-Alpes: 9
+  New Zealand / Canterbury Region: 7
+  Japan / Gifu Prefecture: 7
+  United States / Wyoming: 7
+  United States / Alaska: 7
+  Austria / Vorarlberg: 7
+  France / Pyrénées-Orientales: 7
+  Spain / Lleida: 6
+  Italy / Bolzano/Bozen: 6
+  Japan / Fukushima Prefecture: 5
+  Japan / Hyogo Prefecture: 5
+  Japan / Toyama Prefecture: 5
+  United States / North Carolina: 5
+  Slovenia / Upper Carniola: 5
+  France / Hautes-Pyrénées: 4
   United States / West Virginia: 4
-  United States / North Carolina: 4
-  Canada / Ontario: 3
-  United States / Wyoming: 3
+  Finland / Lapland: 4
+  South Korea / Kangwon-Do: 4
+  Poland / Silesian Voivodeship: 4
+  Australia / Victoria: 4
+  Spain / Huesca: 4
+  Switzerland / Valais: 4
+  Japan / Iwate Prefecture: 4
+  Austria / Carinthia: 4
+  United States / Connecticut: 4
+  Norway / Vestland: 3
+  Norway / Innlandet: 3
+  Chile / Metropolitana: 3
+  Japan / Yamagata Prefecture: 3
+  United States / Missouri: 3
+  United States / Ohio: 3
+  France / Alpes-de-Haute-Provence: 3
+  United States / North Dakota: 3
+  United States / Nevada: 3
+  Australia / New South Wales: 3
+  Canada / Newfoundland and Labrador: 3
   United States / Virginia: 3
+  Norway / Viken: 3
+  Germany / Bavaria: 3
+  Switzerland / Bern: 3
+  Japan / Tottori Prefecture: 3
+  Japan / Hiroshima Prefecture: 3
+  France / Vosges: 3
+  Canada / Manitoba: 3
+  Germany / North Rhine-Westphalia: 3
+  Japan / Ishikawa Prefecture: 3

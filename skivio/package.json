@@ -11,7 +11,8 @@
     "score": "node pipeline/04-score-and-floor.mjs",
     "snapshot": "node pipeline/05-export-snapshot.mjs",
     "pipeline:seed": "npm run ingest:seed && npm run score && npm run snapshot",
-    "pipeline:full": "npm run ingest:wikidata && npm run ingest:openskimap && npm run ingest:passes && npm run score && npm run snapshot",
+    "ingest:overlay": "node pipeline/06-overlay-seed.mjs",
+    "pipeline:full": "npm run ingest:wikidata && npm run ingest:openskimap && npm run ingest:overlay && npm run ingest:openskimap && npm run ingest:passes && npm run score && npm run snapshot",
     "dev": "next dev",
     "build": "next build",
     "audit": "node scripts/audit.mjs"
@@ -22,6 +23,8 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "playwright-core": "^1.61.1",
+    "undici": "^8.8.0"
   }
 }

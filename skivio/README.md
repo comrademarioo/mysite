@@ -11,24 +11,32 @@ every page is computed from data. See `CLAUDE.md` at the repo root for the full 
 - **`data/snapshot.json`** — the build's only data input, exported from Postgres. Committed, so
   `npm run build` works anywhere without a database.
 
-## Current data state — READ THIS
+## Current data state
 
-The environment this was built in blocks outbound HTTPS to the seed sources
-(query.wikidata.org, tiles.openskimap.org, pass sites all 403 through the proxy). So v0 runs on
-a **provisional curated seed** (`pipeline/seed/*.json`): 257 major North American resorts +
-2026-27 pass rosters (Ikon unlimited-18, Mountain Collective, and Midwest Family Indy→Ikon moves
-verified against press coverage; Indy roster is a partial subset).
+The full pipeline HAS run (2026-07): Wikidata skeleton (1,326 entities) → OpenSkiMap
+enrichment (964 matched, stats + regions from the daily GeoJSON) → curated-seed overlay
+(night skiing, gap-fill, verified pass tiers; 26 majors missing from Wikidata's class tree
+inserted from seed) → live roster scrape. Roster sources that actually work headlessly:
 
-The real pipeline (steps 1–3 below) is written and ready. Once network access to those hosts is
-enabled (Claude Code environment settings → network policy, or run locally):
+- **Ikon** — the Sanity CMS dataset the site itself reads (public, includes coords).
+- **Indy** — server-rendered `/our-resorts` page (138 alpine matches of 276 roster rows;
+  the rest are XC/international, listed in `data/unmatched-roster.csv`).
+- **Mountain Collective** — server-rendered `/resorts/` page.
+- **Epic** — bot-walled to non-browser clients AND headless Chromium is blocked by this
+  environment's egress proxy, so Epic stays on the seed roster (verified against 2026-27
+  press coverage). Re-run `npm run ingest:passes` from an unrestricted machine to scrape live.
+
+Review files (spec-mandated, never silently guessed): `data/ambiguous-matches.csv`
+(34 Wikidata↔OpenSkiMap ambiguities, e.g. Whistler vs Blackcomb as separate OSM areas),
+`data/unmatched-roster.csv`.
+
+Refresh everything:
 
 ```bash
 npm run pipeline:full     # wikidata → openskimap → rosters → score → snapshot
-npm run build             # regenerate the whole site at full scale
-npm run audit             # must pass before deploy
+node pipeline/06-overlay-seed.mjs   # seed overlay (run between openskimap and rosters)
+npm run build && npm run audit
 ```
-
-Until then, treat every stat as provisional; the pipeline replaces the seed wholesale.
 
 ## Pipeline (build order per spec)
 

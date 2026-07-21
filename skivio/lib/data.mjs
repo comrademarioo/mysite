@@ -45,8 +45,34 @@ export function displayName(r) {
 }
 
 // ---------- floors ----------
-export const resortQualifies = (r) => r.data_score >= 3;
-export const vsQualifies = (r) => r.data_score >= 4;
+// Score floor + scope floor. North America is v1 scope; rest-of-world rows
+// get pages only when they sit in a real cluster (a floor-passing region) or
+// on a tracked pass — isolated one-offs (a lone Kazakh or Greek hill) fail
+// the 4-clicks-from-home reachability law and are exactly the thin tail the
+// spec says not to ship. They stay in the DB as inventory.
+const NA = new Set(['United States', 'Canada', 'Mexico']);
+
+let regionCountCache = null;
+function regionCount(r) {
+  if (!regionCountCache) {
+    regionCountCache = new Map();
+    for (const x of db().resorts) {
+      if (x.data_score >= 3 && x.region) {
+        const k = `${x.country}|${x.region}`;
+        regionCountCache.set(k, (regionCountCache.get(k) || 0) + 1);
+      }
+    }
+  }
+  return r.region ? regionCountCache.get(`${r.country}|${r.region}`) || 0 : 0;
+}
+
+export function resortQualifies(r) {
+  if (r.data_score < 3) return false;
+  if (NA.has(r.country)) return true;
+  const onPass = db().passesOf.has(r.slug);
+  return onPass || regionCount(r) >= 3;
+}
+export const vsQualifies = (r) => r.data_score >= 4 && resortQualifies(r);
 
 export function qualifyingResorts() {
   return db().resorts.filter(resortQualifies);
@@ -85,9 +111,14 @@ export function geoHub(cSlug, rSlug) {
 }
 
 // ---------- vs pages ----------
-// Pairing rule: same region OR same pass, BOTH data_score >= 4.
-// Canonical URL orders slugs alphabetically; separator '-vs-' (slugs contain
-// hyphens, so a bare '{a}-{b}' join would be unparseable).
+// Pairing rule: same region OR (same pass AND within 250 km), BOTH
+// data_score >= 4. The distance qualifier exists because the real Indy roster
+// (138 resorts) turns an unqualified same-pass leg into a ~10k-page full mesh
+// of implausible cross-country pairs — the spec's stated expectation is 3-5k
+// vs-pages, and 250 km keeps the pass leg to genuine "which mountain on my
+// pass" decisions. Canonical URL orders slugs alphabetically; separator
+// '-vs-' (slugs contain hyphens, so a bare '{a}-{b}' join is unparseable).
+const SAME_PASS_MAX_KM = 250;
 let vsCache = null;
 export function vsPairs() {
   if (vsCache) return vsCache;
@@ -102,7 +133,7 @@ export function vsPairs() {
       const a = eligible[i], b = eligible[j];
       const sameRegion = a.country === b.country && a.region && a.region === b.region;
       let samePass = false;
-      if (!sameRegion) {
+      if (!sameRegion && distanceKm(a, b) <= SAME_PASS_MAX_KM) {
         for (const p of passSets.get(a.slug)) {
           if (passSets.get(b.slug).has(p)) { samePass = true; break; }
         }
@@ -224,14 +255,15 @@ export function recordScopes() {
     { slug: 'united-states', label: 'the United States', filter: (r) => r.country === 'United States' },
     { slug: 'canada', label: 'Canada', filter: (r) => r.country === 'Canada' },
   ];
-  for (const g of geoHubs()) {
-    if (g.resorts.length >= 10) {
-      scopes.push({
-        slug: g.regionSlug, label: g.region,
-        filter: (r) => r.region === g.region && r.country === g.country,
-        hub: g,
-      });
-    }
+  // Top 13 regions by qualifying-resort count → (13 + 3 scopes) × 6 metrics
+  // = 96 records pages, inside the spec's ~50-100 budget. A raw >=10 floor
+  // admits 30+ regions at full-data scale and triples the page count.
+  for (const g of geoHubs().slice(0, 13)) {
+    scopes.push({
+      slug: g.regionSlug, label: g.region,
+      filter: (r) => r.region === g.region && r.country === g.country,
+      hub: g,
+    });
   }
   return scopes;
 }

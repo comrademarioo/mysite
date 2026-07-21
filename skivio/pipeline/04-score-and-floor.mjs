@@ -36,26 +36,37 @@ async function main() {
   const { rows: dist } = await pool.query(
     'SELECT data_score, count(*)::int FROM resorts GROUP BY data_score ORDER BY data_score DESC',
   );
-  const { rows: [{ n: resortPages }] } = await pool.query(
-    'SELECT count(*)::int AS n FROM resorts WHERE data_score >= 3',
-  );
+  // Mirrors lib/data.mjs floors: score floor + scope floor (NA always; ROW
+  // needs a floor-passing region cluster or a pass membership).
+  const { rows: [{ n: resortPages }] } = await pool.query(`
+    WITH counts AS (
+      SELECT country, region, count(*) AS n FROM resorts
+      WHERE data_score >= 3 AND region IS NOT NULL GROUP BY country, region)
+    SELECT count(*)::int AS n FROM resorts r
+    WHERE r.data_score >= 3 AND (
+      r.country IN ('United States','Canada','Mexico')
+      OR EXISTS (SELECT 1 FROM pass_resorts pr WHERE pr.resort_id = r.id)
+      OR EXISTS (SELECT 1 FROM counts c WHERE c.country = r.country AND c.region = r.region AND c.n >= 3))`);
 
-  // Vs-page candidates: same region OR same pass, both >= 4, alphabetical pair order.
+  // Vs pairs: same region OR (same pass AND <= 250 km), both >= 4 + scope floor.
   const { rows: [{ n: vsPages }] } = await pool.query(`
-    SELECT count(*)::int AS n FROM (
-      SELECT DISTINCT least(a.slug, b.slug) AS s1, greatest(a.slug, b.slug) AS s2
-      FROM resorts a
-      JOIN resorts b ON a.slug < b.slug
-      WHERE a.data_score >= 4 AND b.data_score >= 4
-        AND (
-          (a.country = b.country AND a.region = b.region)
-          OR EXISTS (
-            SELECT 1 FROM pass_resorts pa
-            JOIN pass_resorts pb ON pa.pass_id = pb.pass_id
-            WHERE pa.resort_id = a.id AND pb.resort_id = b.id
-          )
-        )
-    ) q`);
+    WITH counts AS (
+      SELECT country, region, count(*) AS n FROM resorts
+      WHERE data_score >= 3 AND region IS NOT NULL GROUP BY country, region),
+    pages AS (
+      SELECT r.* FROM resorts r
+      WHERE r.data_score >= 4 AND (
+        r.country IN ('United States','Canada','Mexico')
+        OR EXISTS (SELECT 1 FROM pass_resorts pr WHERE pr.resort_id = r.id)
+        OR EXISTS (SELECT 1 FROM counts c WHERE c.country = r.country AND c.region = r.region AND c.n >= 3)))
+    SELECT count(*)::int AS n FROM pages a JOIN pages b ON a.slug < b.slug
+    WHERE (a.country = b.country AND a.region = b.region)
+      OR (
+        2*6371*asin(sqrt( power(sin(radians(b.lat-a.lat)/2),2) +
+          cos(radians(a.lat))*cos(radians(b.lat))*power(sin(radians(b.lng-a.lng)/2),2) )) <= 250
+        AND EXISTS (
+          SELECT 1 FROM pass_resorts pa JOIN pass_resorts pb ON pa.pass_id = pb.pass_id
+          WHERE pa.resort_id = a.id AND pb.resort_id = b.id))`);
 
   const { rows: geo } = await pool.query(`
     SELECT country, region, count(*)::int AS n FROM resorts

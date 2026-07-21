@@ -4,6 +4,7 @@
 //
 // Usage (after DNS is live and the site is deployed):
 //   node scripts/submit.mjs
+import '../pipeline/proxy.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

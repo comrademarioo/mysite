@@ -9,6 +9,7 @@
 //
 // Geographic scope v1: North America first (US, Canada, Mexico). Rest-of-world
 // rows are still stored (inventory), but geo scope keeps the pull polite.
+import './proxy.mjs';
 import { getPool } from './db.mjs';
 import { slugify } from '../lib/slug.mjs';
 
@@ -87,10 +88,19 @@ async function main() {
   const pool = getPool();
   const client = await pool.connect();
   let inserted = 0;
+  // Clean slug first (vail), region-suffixed only on collision between
+  // different entities (crystal-mountain vs crystal-mountain-michigan).
+  const slugTaken = new Map(); // slug -> qid
   try {
     await client.query('BEGIN');
     for (const r of all) {
-      const slug = slugify(`${r.name}${r.region ? '-' + r.region : ''}`);
+      let slug = slugify(r.name);
+      if (slugTaken.has(slug) && slugTaken.get(slug) !== r.qid) {
+        slug = slugify(`${r.name}-${r.region || r.country}`);
+        let n = 2;
+        while (slugTaken.has(slug) && slugTaken.get(slug) !== r.qid) slug = `${slugify(r.name)}-${n++}`;
+      }
+      slugTaken.set(slug, r.qid);
       await client.query(
         `INSERT INTO resorts (slug, name, country, region, lat, lng, summit_elev_m, wikidata_qid)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
