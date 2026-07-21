@@ -25,7 +25,7 @@ export function generateMetadata({ params }) {
   const { p, g } = load(params);
   return pageMeta({
     title: `${p.name} Resorts in ${g.region} (${p.season}): ${g.members.length} Mountains`,
-    description: `Which ${g.region} resorts are on the ${p.name} for ${p.season}? ${g.members.map((m) => m.r.name).slice(0, 5).join(', ')} — with access tiers and stats.`,
+    description: `Which ${g.region} resorts are on the ${p.name} for ${p.season}? ${g.members.map((m) => m.r.name).slice(0, 5).join(', ')}, with access tiers and stats.`,
     path: `/pass/${p.slug}/${g.regionSlug}`,
   });
 }
@@ -37,7 +37,7 @@ export default function PassRegionPage({ params }) {
       <nav className="breadcrumbs">
         <Link href="/">Home</Link> › <Link href={`/pass/${p.slug}`}>{p.name}</Link> › {g.region}
       </nav>
-      <h1>{p.name} in {g.region} — {p.season}</h1>
+      <h1>{p.name} in {g.region} ({p.season})</h1>
       <p className="sub">{g.members.length} {g.region} resorts are on the {p.name} this season.</p>
       <table>
         <thead>

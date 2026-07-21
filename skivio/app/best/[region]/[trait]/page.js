@@ -14,7 +14,7 @@ export function generateMetadata({ params }) {
   const top3 = b.resorts.slice(0, 3).map((r) => r.name);
   return pageMeta({
     title: `Best ${b.hub.region} Ski Resorts for ${b.trait.label} (${SEASON()})`,
-    description: `${b.hub.region} ranked by ${b.trait.noun}: ${top3.join(', ')} lead ${b.resorts.length} qualifying resorts. Computed from terrain and stats data, not opinions.`,
+    description: `${b.hub.region} ranked by ${b.trait.noun}: ${top3.join(', ')} top the list of ${b.resorts.length} qualifying resorts.`,
     path: b.path,
   });
 }
@@ -28,8 +28,8 @@ export default function BestPage({ params }) {
       </nav>
       <h1>Best {b.hub.region} Ski Resorts for {b.trait.label}</h1>
       <p className="sub">
-        {b.resorts.length} {b.hub.region} resorts qualify, ranked by {b.trait.noun} — computed
-        from the terrain and stats data, re-generated when the data changes.
+        {b.resorts.length} {b.hub.region} resorts qualify, ranked by {b.trait.noun} using each
+        resort's terrain and stats data.
       </p>
 
       {b.resorts.map((r, i) => (

@@ -80,7 +80,7 @@ export function qualifyingResorts() {
 
 // ---------- units ----------
 export const mToFt = (m) => (m == null ? null : Math.round(m * 3.28084));
-export const fmt = (n) => (n == null ? '—' : n.toLocaleString('en-US'));
+export const fmt = (n) => (n == null ? '-' : n.toLocaleString('en-US'));
 
 // ---------- geo ----------
 export const countrySlug = (country) => slugify(country);

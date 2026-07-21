@@ -16,7 +16,7 @@ export function resortMeta(r) {
   if (r.lifts_total) bits.push(`${r.lifts_total} lifts`);
   if (r.runs_total) bits.push(`${r.runs_total} runs`);
   return pageMeta({
-    title: `${displayName(r)} Ski Resort — Stats, Terrain & Pass Coverage`,
+    title: `${displayName(r)} Ski Resort: Stats, Terrain, and Pass Coverage`,
     description: `${r.name} (${r.region}, ${r.country}): ${bits.join(', ')}. Terrain split, elevation, ${SEASON()} pass coverage, and head-to-head comparisons.`,
     path: `/resort/${r.slug}`,
   });
@@ -25,7 +25,7 @@ export function resortMeta(r) {
 export function vsMeta(a, b, key) {
   return pageMeta({
     title: `${displayName(a)} vs ${displayName(b)}: Stats, Terrain, and Which Pass Covers Them`,
-    description: `${displayName(a)} or ${displayName(b)}? Side-by-side vertical, lifts, runs, terrain split, and ${SEASON()} pass coverage to settle it with numbers.`,
+    description: `${displayName(a)} or ${displayName(b)}? Compare vertical, lifts, runs, terrain split, and ${SEASON()} pass coverage side by side.`,
     path: `/vs/${key}`,
   });
 }

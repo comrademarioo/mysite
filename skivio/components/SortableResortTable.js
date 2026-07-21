@@ -44,11 +44,11 @@ export default function SortableResortTable({ rows }) {
         {shown.map((r) => (
           <tr key={r.slug}>
             <td><a href={`/resort/${r.slug}`}>{r.name}</a></td>
-            <td className="num">{r.verticalFt?.toLocaleString() ?? '—'}</td>
-            <td className="num">{r.summitFt?.toLocaleString() ?? '—'}</td>
-            <td className="num">{r.lifts ?? '—'}</td>
-            <td className="num">{r.runs ?? '—'}</td>
-            <td className="num">{r.pctExpert != null ? `${r.pctExpert}%` : '—'}</td>
+            <td className="num">{r.verticalFt?.toLocaleString() ?? '-'}</td>
+            <td className="num">{r.summitFt?.toLocaleString() ?? '-'}</td>
+            <td className="num">{r.lifts ?? '-'}</td>
+            <td className="num">{r.runs ?? '-'}</td>
+            <td className="num">{r.pctExpert != null ? `${r.pctExpert}%` : '-'}</td>
             <td>{r.night}</td>
           </tr>
         ))}

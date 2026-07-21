@@ -48,7 +48,7 @@ export default function ResortPage({ params }) {
         <div className="stat"><div className="v">{fmt(mToFt(r.base_elev_m))} ft</div><div className="k">Base</div></div>
         <div className="stat"><div className="v">{fmt(r.lifts_total)}</div><div className="k">Lifts</div></div>
         <div className="stat"><div className="v">{fmt(r.runs_total)}</div><div className="k">Runs</div></div>
-        <div className="stat"><div className="v">{r.night_skiing ? 'Yes' : 'No'}</div><div className="k">Night skiing</div></div>
+        <div className="stat"><div className="v">{r.night_skiing == null ? '-' : r.night_skiing ? 'Yes' : 'No'}</div><div className="k">Night skiing</div></div>
       </div>
 
       <h2>Terrain</h2>
@@ -104,7 +104,7 @@ export default function ResortPage({ params }) {
       )}
 
       {hub && <p><Link href={hub.path}>← All {r.region} ski resorts</Link></p>}
-      <p className="small">Season context: {SEASON()} pass rosters. Stats are resort-published/open-data figures.</p>
+      <p className="small">Pass coverage shown is for the {SEASON()} season. Stats come from OpenStreetMap data and resort-published figures.</p>
     </>
   );
 }

@@ -9,10 +9,10 @@ const ROWS = [
   { label: 'Base elevation', get: (r) => r.base_elev_m, show: (r) => `${fmt(mToFt(r.base_elev_m))} ft`, higherWins: true },
   { label: 'Lifts', get: (r) => r.lifts_total, show: (r) => fmt(r.lifts_total), higherWins: true },
   { label: 'Runs', get: (r) => r.runs_total, show: (r) => fmt(r.runs_total), higherWins: true },
-  { label: 'Beginner terrain', get: (r) => r.pct_beginner, show: (r) => r.pct_beginner == null ? '—' : `${r.pct_beginner}%`, higherWins: true },
-  { label: 'Intermediate terrain', get: (r) => r.pct_intermediate, show: (r) => r.pct_intermediate == null ? '—' : `${r.pct_intermediate}%`, higherWins: true },
-  { label: 'Expert terrain', get: (r) => r.pct_expert, show: (r) => r.pct_expert == null ? '—' : `${r.pct_expert}%`, higherWins: true },
-  { label: 'Night skiing', get: (r) => (r.night_skiing ? 1 : 0), show: (r) => (r.night_skiing ? 'Yes' : 'No'), higherWins: true },
+  { label: 'Beginner terrain', get: (r) => r.pct_beginner, show: (r) => r.pct_beginner == null ? '-' : `${r.pct_beginner}%`, higherWins: true },
+  { label: 'Intermediate terrain', get: (r) => r.pct_intermediate, show: (r) => r.pct_intermediate == null ? '-' : `${r.pct_intermediate}%`, higherWins: true },
+  { label: 'Expert terrain', get: (r) => r.pct_expert, show: (r) => r.pct_expert == null ? '-' : `${r.pct_expert}%`, higherWins: true },
+  { label: 'Night skiing', get: (r) => (r.night_skiing == null ? null : r.night_skiing ? 1 : 0), show: (r) => (r.night_skiing == null ? '-' : r.night_skiing ? 'Yes' : 'No'), higherWins: true },
 ];
 
 export default function CompareTable({ a, b, linkNames = false }) {

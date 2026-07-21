@@ -34,11 +34,11 @@ export default function PassPage({ params }) {
   return (
     <>
       <nav className="breadcrumbs"><Link href="/">Home</Link> › {p.name}</nav>
-      <h1>{p.name} Resorts — {p.season} Roster</h1>
+      <h1>{p.name} Resorts: {p.season} Roster</h1>
       <p className="sub">
         {roster.length} North American resorts on the {p.name} for {p.season}:{' '}
-        {unlimited} unlimited, {roster.length - unlimited} with limited days. Re-checked each season;
-        the roster below is the current season — this page updates in place.
+        {unlimited} unlimited, {roster.length - unlimited} with limited days. This page always
+        shows the current season's roster.
       </p>
       <p>
         Comparing passes for a specific set of mountains?{' '}

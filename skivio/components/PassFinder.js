@@ -86,14 +86,14 @@ export default function PassFinder({ resorts, passes, memberships }) {
       </div>
 
       {selected.length === 0 ? (
-        <p className="small">Your list is saved in your browser — build it once, come back anytime.</p>
+        <p className="small">Your list is saved in your browser, so you can come back to it anytime.</p>
       ) : (
         <>
           <h2>Best pass for your {selected.length}-resort list</h2>
           {coverage.map(({ pass, covered, missing, limitedCount }) => (
             <div className="card" key={pass.slug}>
               <h3 style={{ marginTop: 0 }}>
-                <a href={`/pass/${pass.slug}`}>{pass.name}</a> — covers {covered.length} of {selected.length}
+                <a href={`/pass/${pass.slug}`}>{pass.name}</a>: covers {covered.length} of {selected.length}
                 {limitedCount > 0 && <span className="badge limited" style={{ marginLeft: 8 }}>{limitedCount} limited-days</span>}
               </h3>
               {covered.length > 0 && (
@@ -108,7 +108,7 @@ export default function PassFinder({ resorts, passes, memberships }) {
           ))}
           <p className="small">
             Tiers shown are the full ({passes[0]?.season}) version of each pass. Day limits and
-            blackout rules change by pass level — verify at purchase.
+            blackout rules vary by pass level, so double-check before you buy.
           </p>
         </>
       )}

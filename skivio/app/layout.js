@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata = {
   metadataBase: new URL('https://skivio.org'),
-  title: { default: 'Skivio — Compare Ski Resorts & Find Your Pass', template: '%s | Skivio' },
+  title: { default: 'Skivio: Compare Ski Resorts and Find Your Pass', template: '%s | Skivio' },
 };
 
 export default function RootLayout({ children }) {
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
               <a href="https://www.wikidata.org" rel="noopener">Wikidata</a> (CC0).
             </p>
             <p>
-              Pass rosters are the {`2026–27`} season as published by each pass; always confirm
+              Pass rosters are the 2026-27 season as published by each pass. Always confirm
               with the pass seller before buying. Skivio is not affiliated with any pass or resort.
             </p>
             <p>© {new Date().getFullYear()} skivio.org</p>

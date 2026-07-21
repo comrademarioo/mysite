@@ -37,7 +37,7 @@ export default function RosterTable({ rows }) {
           <option value="limited">Limited days only</option>
         </select>
         <select value={sort} onChange={(e) => setSort(e.target.value)} style={{ padding: '7px 8px', border: '1px solid #dbe4ec', borderRadius: 6 }}>
-          <option value="name">Sort: A–Z</option>
+          <option value="name">Sort: A-Z</option>
           <option value="vertical">Sort: vertical</option>
           <option value="lifts">Sort: lifts</option>
           <option value="runs">Sort: runs</option>
@@ -57,9 +57,9 @@ export default function RosterTable({ rows }) {
                   {r.access === 'unlimited' ? 'Unlimited' : `${r.days_limit} days`}
                 </span>
               </td>
-              <td className="num">{r.verticalFt ? `${r.verticalFt.toLocaleString()} ft` : '—'}</td>
-              <td className="num">{r.lifts ?? '—'}</td>
-              <td className="num">{r.runs ?? '—'}</td>
+              <td className="num">{r.verticalFt ? `${r.verticalFt.toLocaleString()} ft` : '-'}</td>
+              <td className="num">{r.lifts ?? '-'}</td>
+              <td className="num">{r.runs ?? '-'}</td>
             </tr>
           ))}
         </tbody>

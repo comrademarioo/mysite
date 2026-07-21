@@ -21,17 +21,17 @@ export default function PassFinderPage() {
   return (
     <>
       <nav className="breadcrumbs"><Link href="/">Home</Link> › Pass Finder</nav>
-      <h1>Ski Pass Finder — {SEASON()}</h1>
+      <h1>Ski Pass Finder {SEASON()}</h1>
       <p className="sub">
-        Pick your season's mountains; the finder ranks Epic, Ikon, Indy Pass, and Mountain
-        Collective by how many of them each pass actually covers, and flags limited-day access.
+        Pick the mountains you plan to ski and the finder ranks Epic, Ikon, Indy Pass, and
+        Mountain Collective by how many of them each pass covers, with day limits flagged.
       </p>
       <PassFinder resorts={resorts} passes={passes} memberships={memberships} />
       <h2>How it works</h2>
       <p>
         Coverage is computed from each pass's published {SEASON()} roster ({resorts.length} North
         American resorts tracked). "Unlimited" means no day cap on the full pass; "limited" shows
-        the day allotment. The finder doesn't model pricing — it answers the coverage question first.
+        the day allotment. The finder compares coverage, not prices.
       </p>
       <p>
         Browse rosters directly: {passes.map((p, i) => (

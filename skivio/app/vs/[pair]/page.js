@@ -85,7 +85,7 @@ export default function VsPage({ params }) {
               <span key={c.pass.slug} className={`badge ${c.access}`}>
                 <Link href={`/pass/${c.pass.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>{c.pass.name}: {c.text}</Link>
               </span>
-            )) : 'No major pass — independent tickets'}</td>
+            )) : 'Not on a major pass; lift tickets only'}</td>
           </tr>
           <tr>
             <td><Link href={`/resort/${b.slug}`}>{b.name}</Link></td>
@@ -93,14 +93,14 @@ export default function VsPage({ params }) {
               <span key={c.pass.slug} className={`badge ${c.access}`}>
                 <Link href={`/pass/${c.pass.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>{c.pass.name}: {c.text}</Link>
               </span>
-            )) : 'No major pass — independent tickets'}</td>
+            )) : 'Not on a major pass; lift tickets only'}</td>
           </tr>
         </tbody>
       </table>
       <p>
         {shared.length
           ? `One pass covers both: ${shared.map((s) => s.pass.name).join(' and ')}.`
-          : 'No single pass covers both — skiing both means separate passes or lift tickets.'}{' '}
+          : 'No single pass covers both, so skiing both means separate passes or lift tickets.'}{' '}
         <Link href="/ski-pass-finder">Check your full resort list in the pass finder →</Link>
       </p>
 
@@ -118,7 +118,7 @@ export default function VsPage({ params }) {
       )}
 
       <p>
-        Deep dives: <Link href={`/resort/${a.slug}`}>{a.name} stats</Link> ·{' '}
+        More detail: <Link href={`/resort/${a.slug}`}>{a.name} stats</Link> ·{' '}
         <Link href={`/resort/${b.slug}`}>{b.name} stats</Link>
       </p>
     </>

@@ -6,7 +6,7 @@ export default function PassBadges({ r }) {
   const { passesOf, passBySlug } = db();
   const memberships = passesOf.get(r.slug) || [];
   if (!memberships.length) {
-    return <p className="small">Not on Epic, Ikon, Indy, or Mountain Collective — independent lift tickets only.</p>;
+    return <p className="small">Not on Epic, Ikon, Indy, or Mountain Collective. You'll need regular lift tickets here.</p>;
   }
   return (
     <p>

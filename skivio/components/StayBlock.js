@@ -10,7 +10,7 @@ export default function StayBlock({ r }) {
     <div className="card">
       <h3 style={{ marginTop: 0 }}>Stay near {r.name}</h3>
       <p className="small">
-        Lodging fills early for peak weeks — base-area places first.{' '}
+        Lodging near the base fills up first during peak weeks.{' '}
         <a href={url} rel="nofollow sponsored noopener" target="_blank">
           Search stays near {r.name}
         </a>

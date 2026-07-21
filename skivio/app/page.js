@@ -3,7 +3,7 @@ import { db, geoHubs, topResorts, SEASON } from '../lib/data.mjs';
 import { pageMeta } from '../lib/meta.mjs';
 
 export const metadata = pageMeta({
-  title: 'Skivio — Compare Ski Resorts & Find the Right Ski Pass',
+  title: 'Skivio: Compare Ski Resorts and Find the Right Ski Pass',
   description: `Side-by-side ski resort comparisons, ${SEASON()} Epic/Ikon/Indy/Mountain Collective rosters, and a pass finder that tells you which pass covers your resort list.`,
   path: '/',
 });
@@ -18,13 +18,13 @@ export default function Home() {
     <>
       <h1>Compare ski resorts. Pick the right pass.</h1>
       <p className="sub">
-        Every stat on this site is computed from open resort data — vertical, lifts, runs,
-        terrain splits, and {SEASON()} pass coverage. No fluff, just the numbers that decide trips.
+        Skivio pulls open data on hundreds of ski resorts so you can compare vertical, lifts,
+        runs, terrain, and {SEASON()} pass coverage before you commit to a trip or a pass.
       </p>
 
       <div className="card">
         <h2 style={{ marginTop: 0 }}>Which pass covers your resorts?</h2>
-        <p>Pick the mountains you actually want to ski this season; get every pass ranked by how much of your list it covers, with limited-day fine print flagged.</p>
+        <p>Pick the mountains you want to ski this season and see which pass covers the most of them, day limits included.</p>
         <p><Link className="btn" href="/ski-pass-finder">Open the ski pass finder</Link></p>
       </div>
 
@@ -46,7 +46,7 @@ export default function Home() {
         ))}
       </div>
 
-      <h2>Most-compared resorts</h2>
+      <h2>Popular resorts</h2>
       <ul className="linklist">
         {top.map((r) => (
           <li key={r.slug}><Link href={`/resort/${r.slug}`}>{r.name}</Link> <span className="small">{r.region}</span></li>

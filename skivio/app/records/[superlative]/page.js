@@ -13,7 +13,7 @@ export function generateMetadata({ params }) {
   const leader = p.resorts[0];
   return pageMeta({
     title: `${p.metricDef.label} in ${p.scope.label}: ${leader.name} Leads`,
-    description: `${leader.name} tops ${p.scope.label} for ${p.metricDef.label.toLowerCase()} at ${fmt(p.metricDef.value(leader))} ${p.metricDef.unit}. Full ranked top ${p.resorts.length}, computed from resort data.`,
+    description: `${leader.name} tops ${p.scope.label} for ${p.metricDef.label.toLowerCase()} at ${fmt(p.metricDef.value(leader))} ${p.metricDef.unit}. See the full top ${p.resorts.length}.`,
     path: p.path,
   });
 }
@@ -33,8 +33,8 @@ export default function RecordsPageView({ params }) {
       </nav>
       <h1>{p.metricDef.label} in {p.scope.label}</h1>
       <p className="sub">
-        Top {p.resorts.length} ranked by {p.metricDef.label.toLowerCase()} — {p.resorts[0].name} leads
-        at {fmt(p.metricDef.value(p.resorts[0]))} {p.metricDef.unit}.
+        Top {p.resorts.length} ranked by {p.metricDef.label.toLowerCase()}. {p.resorts[0].name} leads
+        with {fmt(p.metricDef.value(p.resorts[0]))} {p.metricDef.unit}.
       </p>
       <table>
         <thead>

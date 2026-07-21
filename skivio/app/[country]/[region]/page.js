@@ -14,7 +14,7 @@ export function generateMetadata({ params }) {
   const top = [...g.resorts].sort((a, b) => prominence(b) - prominence(a)).slice(0, 4);
   return pageMeta({
     title: `${g.region} Ski Resorts: All ${g.resorts.length} Compared by Stats`,
-    description: `Every ${g.region} ski resort with vertical, lifts, runs, terrain split and ${SEASON()} pass coverage — ${top.map((r) => r.name).join(', ')} and more, sortable by stat.`,
+    description: `Every ${g.region} ski resort with vertical, lifts, runs, terrain split and ${SEASON()} pass coverage. ${top.map((r) => r.name).join(', ')} and more, sortable by stat.`,
     path: g.path,
   });
 }
@@ -28,7 +28,7 @@ export default function GeoHubPage({ params }) {
       slug: r.slug, name: r.name,
       verticalFt: mToFt(r.vertical_m), summitFt: mToFt(r.summit_elev_m),
       lifts: r.lifts_total, runs: r.runs_total, pctExpert: r.pct_expert,
-      night: r.night_skiing ? 'Yes' : 'No',
+      night: r.night_skiing == null ? '-' : r.night_skiing ? 'Yes' : 'No',
     }));
   const best = bestPages().filter((b) => b.hub.regionSlug === g.regionSlug);
   const records = recordsPages().filter((p) => p.scope.slug === g.regionSlug);
@@ -45,7 +45,7 @@ export default function GeoHubPage({ params }) {
       <nav className="breadcrumbs"><Link href="/">Home</Link> › {g.country} › {g.region}</nav>
       <h1>{g.region} Ski Resorts</h1>
       <p className="sub">
-        {g.resorts.length} resorts in {g.region}, {g.country} — click a column to sort.
+        {g.resorts.length} resorts in {g.region}, {g.country}. Click a column to sort.
       </p>
 
       <SortableResortTable rows={rows} />
