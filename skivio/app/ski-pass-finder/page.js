@@ -4,7 +4,7 @@ import { pageMeta } from '../../lib/meta.mjs';
 import PassFinder from '../../components/PassFinder';
 
 export const metadata = pageMeta({
-  title: `Ski Pass Finder ${'2026–27'}: Which Pass Covers Your Resorts?`,
+  title: `Ski Pass Finder ${SEASON()}: Which Pass Covers Your Resorts?`,
   description: 'Select the resorts you want to ski; get Epic, Ikon, Indy, and Mountain Collective ranked by how much of your list each covers, with limited-day access flagged.',
   path: '/ski-pass-finder',
 });

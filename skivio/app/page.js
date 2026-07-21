@@ -4,7 +4,7 @@ import { pageMeta } from '../lib/meta.mjs';
 
 export const metadata = pageMeta({
   title: 'Skivio — Compare Ski Resorts & Find the Right Ski Pass',
-  description: `Side-by-side ski resort comparisons, ${'2026–27'} Epic/Ikon/Indy/Mountain Collective rosters, and a pass finder that tells you which pass covers your resort list.`,
+  description: `Side-by-side ski resort comparisons, ${SEASON()} Epic/Ikon/Indy/Mountain Collective rosters, and a pass finder that tells you which pass covers your resort list.`,
   path: '/',
 });
 

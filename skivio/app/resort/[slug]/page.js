@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { db, qualifyingResorts, mToFt, fmt, SEASON } from '../../../lib/data.mjs';
+import { db, qualifyingResorts, mToFt, fmt, SEASON, displayName } from '../../../lib/data.mjs';
 import { resortMeta, skiResortJsonLd } from '../../../lib/meta.mjs';
 import { resortVsLinks, passSiblingsNearby, nearbyResorts, regionHubOf } from '../../../lib/links.mjs';
 import TerrainBar from '../../../components/TerrainBar';
@@ -56,9 +56,9 @@ export default function ResortPage({ params }) {
 
       {mini && (
         <>
-          <h2>{r.name} vs {mini.other.name}</h2>
+          <h2>{r.name} vs {displayName(mini.other)}</h2>
           <CompareTable a={r} b={mini.other} linkNames />
-          <p><Link href={`/vs/${mini.key}`}>Full {r.name} vs {mini.other.name} comparison →</Link></p>
+          <p><Link href={`/vs/${mini.key}`}>Full {r.name} vs {displayName(mini.other)} comparison →</Link></p>
         </>
       )}
 
@@ -96,7 +96,7 @@ export default function ResortPage({ params }) {
           <ul className="linklist">
             {vsLinks.map((v) => (
               <li key={v.key}>
-                <Link href={`/vs/${v.key}`}>{r.name} vs {v.other.name}</Link>
+                <Link href={`/vs/${v.key}`}>{r.name} vs {displayName(v.other)}</Link>
               </li>
             ))}
           </ul>

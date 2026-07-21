@@ -32,6 +32,18 @@ export function db() {
 
 export const SEASON = () => db().passes[0]?.season || '2026-27';
 
+// Names like "Blue Mountain" (ON + PA) exist twice; append the region whenever
+// the bare name is ambiguous so every title/link is unique and unmistakable.
+let ambiguousNames = null;
+export function displayName(r) {
+  if (!ambiguousNames) {
+    const counts = new Map();
+    for (const x of db().resorts) counts.set(x.name, (counts.get(x.name) || 0) + 1);
+    ambiguousNames = new Set([...counts].filter(([, c]) => c > 1).map(([n]) => n));
+  }
+  return ambiguousNames.has(r.name) ? `${r.name} (${r.region})` : r.name;
+}
+
 // ---------- floors ----------
 export const resortQualifies = (r) => r.data_score >= 3;
 export const vsQualifies = (r) => r.data_score >= 4;

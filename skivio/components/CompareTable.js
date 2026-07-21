@@ -1,7 +1,7 @@
 // Server component: side-by-side stats table with per-row winner highlight.
 // Rendered fully at build time — this table must exist in the raw HTML.
 import Link from 'next/link';
-import { mToFt, fmt } from '../lib/data.mjs';
+import { mToFt, fmt, displayName } from '../lib/data.mjs';
 
 const ROWS = [
   { label: 'Vertical drop', get: (r) => r.vertical_m, show: (r) => `${fmt(mToFt(r.vertical_m))} ft (${fmt(r.vertical_m)} m)`, higherWins: true },
@@ -21,8 +21,8 @@ export default function CompareTable({ a, b, linkNames = false }) {
       <thead>
         <tr>
           <th>Stat</th>
-          <th>{linkNames ? <Link href={`/resort/${a.slug}`}>{a.name}</Link> : a.name}</th>
-          <th>{linkNames ? <Link href={`/resort/${b.slug}`}>{b.name}</Link> : b.name}</th>
+          <th>{linkNames ? <Link href={`/resort/${a.slug}`}>{displayName(a)}</Link> : displayName(a)}</th>
+          <th>{linkNames ? <Link href={`/resort/${b.slug}`}>{displayName(b)}</Link> : displayName(b)}</th>
         </tr>
       </thead>
       <tbody>

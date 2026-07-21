@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { db, vsPairs, vsByKey, mToFt, fmt, SEASON } from '../../../lib/data.mjs';
+import { db, vsPairs, vsByKey, mToFt, fmt, SEASON, displayName } from '../../../lib/data.mjs';
 import { vsMeta } from '../../../lib/meta.mjs';
 import { relatedVsLinks, swapOptions, regionHubOf } from '../../../lib/links.mjs';
 import CompareTable from '../../../components/CompareTable';
@@ -59,9 +59,9 @@ export default function VsPage({ params }) {
     <>
       <nav className="breadcrumbs">
         <Link href="/">Home</Link>
-        {hubA && <> › <Link href={hubA.path}>{a.region}</Link></>} › {a.name} vs {b.name}
+        {hubA && <> › <Link href={hubA.path}>{a.region}</Link></>} › {displayName(a)} vs {displayName(b)}
       </nav>
-      <h1>{a.name} vs {b.name}</h1>
+      <h1>{displayName(a)} vs {displayName(b)}</h1>
       <p className="sub">
         {a.name} ({a.region}) and {b.name} ({b.region}) head-to-head: stats, terrain, and {SEASON()} pass coverage.
       </p>
@@ -111,7 +111,7 @@ export default function VsPage({ params }) {
           <h2>Related comparisons</h2>
           <div className="grid">
             {related.map((v) => (
-              <Link key={v.key} href={`/vs/${v.key}`}>{v.ra.name} vs {v.rb.name}</Link>
+              <Link key={v.key} href={`/vs/${v.key}`}>{displayName(v.ra)} vs {displayName(v.rb)}</Link>
             ))}
           </div>
         </>
