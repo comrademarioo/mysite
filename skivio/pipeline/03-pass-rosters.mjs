@@ -23,6 +23,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import './proxy.mjs';
 import { getPool } from './db.mjs';
+import { slugify } from '../lib/slug.mjs';
+
+// Some rosters list an umbrella name that maps to several resort rows.
+// Without expansion, Mountain Collective's "Aspen Snowmass" entry matches
+// nothing and Aspen silently drops off the pass.
+const ALIASES = {
+  'aspen snowmass': ['Aspen Mountain', 'Aspen Highlands', 'Buttermilk', 'Snowmass'],
+  'big bear': ['Bear Mountain', 'Snow Summit'],
+};
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, '..', 'data');
@@ -46,6 +55,60 @@ function haversineKm(lat1, lng1, lat2, lng2) {
   const a = Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// Minimal reader for the cached OpenSkiMap dump (canonical parsing lives in
+// 02-openskimap-enrich.mjs) — used for roster-driven resort discovery.
+function loadOsmAreas() {
+  const cache = path.join(DATA_DIR, 'ski_areas.geojson');
+  if (!fs.existsSync(cache)) return null;
+  const geo = JSON.parse(fs.readFileSync(cache, 'utf8'));
+  return geo.features
+    .filter((f) => {
+      const st = f.properties?.status;
+      return (st === 'operating' || st == null) && (f.properties?.activities || []).includes('downhill');
+    })
+    .map((f) => {
+      const flat = [];
+      (function walk(c) { if (typeof c[0] === 'number') flat.push(c); else c.forEach(walk); })(
+        f.geometry?.type === 'Point' ? [f.geometry.coordinates] : f.geometry?.coordinates || []);
+      if (!flat.length) return null;
+      const point = {
+        lng: flat.reduce((s, c) => s + c[0], 0) / flat.length,
+        lat: flat.reduce((s, c) => s + c[1], 0) / flat.length,
+      };
+      const loc = (f.properties?.places || []).map((p) => p?.localized?.en).find((l) => l?.region || l?.country);
+      const s = f.properties?.statistics || {};
+      const stats = {};
+      if (s.maxElevation != null) stats.summit_elev_m = Math.round(s.maxElevation);
+      if (s.minElevation != null) stats.base_elev_m = Math.round(s.minElevation);
+      if (s.maxElevation != null && s.minElevation != null) stats.vertical_m = Math.round(s.maxElevation - s.minElevation);
+      const lifts = s.lifts?.byType;
+      if (lifts) {
+        const n = Object.values(lifts).reduce((acc, v) => acc + (v?.count || 0), 0);
+        if (n > 0) stats.lifts_total = n;
+      }
+      const runs = s.runs?.byActivity?.downhill?.byDifficulty;
+      if (runs) {
+        const mapDiff = { novice: 'beginner', easy: 'beginner', beginner: 'beginner', intermediate: 'intermediate', advanced: 'expert', expert: 'expert', extreme: 'expert', freeride: 'expert' };
+        const buckets = { beginner: 0, intermediate: 0, expert: 0 };
+        let classified = 0, total = 0;
+        for (const [diff, v] of Object.entries(runs)) {
+          const n = v?.count || 0;
+          if (n <= 0) continue;
+          total += n;
+          if (mapDiff[diff]) { buckets[mapDiff[diff]] += n; classified += n; }
+        }
+        if (total > 0) stats.runs_total = total;
+        if (classified > 0) {
+          stats.pct_beginner = Math.round((buckets.beginner / classified) * 100);
+          stats.pct_intermediate = Math.round((buckets.intermediate / classified) * 100);
+          stats.pct_expert = 100 - stats.pct_beginner - stats.pct_intermediate;
+        }
+      }
+      return { id: f.properties?.id, name: f.properties?.name, point, stats, region: loc?.region || null, country: loc?.country || null };
+    })
+    .filter((a) => a && a.name);
 }
 
 async function fetchText(url) {
@@ -161,9 +224,13 @@ async function main() {
 
     await pool.query('DELETE FROM pass_resorts WHERE pass_id = $1', [passRow.id]);
     let inserted = 0;
-    for (const entry of roster) {
+    const expanded = roster.flatMap((entry) => {
+      const kids = ALIASES[norm(entry.name)];
+      return kids ? kids.map((name) => ({ ...entry, name, lat: null, lng: null })) : [entry];
+    });
+    for (const entry of expanded) {
       const { hit, reason } = matchResort(entry);
-      if (!hit) { unmatched.push({ pass: p.slug, name: entry.name, reason }); continue; }
+      if (!hit) { unmatched.push({ pass: p.slug, passId: passRow.id, name: entry.name, reason, entry }); continue; }
       const prev = tierByResort.get(hit.id);
       await pool.query(
         `INSERT INTO pass_resorts (pass_id, resort_id, access, days_limit)
@@ -174,12 +241,70 @@ async function main() {
     console.log(`  ${inserted} matched → pass_resorts (tiers kept from prior rows where present)`);
   }
 
+  // Roster-driven discovery: a roster entry that matches nothing in the DB is
+  // often a real ski area that Wikidata's class tree missed (plenty of Indy
+  // hills). If OpenSkiMap knows exactly one operating downhill area by that
+  // name (near the roster coords when we have them), create the resort from
+  // OSM data and attach the membership. Nordic centers never match because
+  // the area list is downhill-only, so they stay in the review file.
+  const stillUnmatched = [];
+  const osmAreas = loadOsmAreas();
+  if (osmAreas) {
+    let discovered = 0;
+    for (const u of unmatched) {
+      let cands = osmAreas.filter((a) => similar(u.name, a.name));
+      if (u.entry.lat != null && u.entry.lng != null) {
+        cands = cands.filter((a) => haversineKm(u.entry.lat, u.entry.lng, a.point.lat, a.point.lng) <= 40);
+      }
+      if (cands.length !== 1) { stillUnmatched.push(u); continue; }
+      const a = cands[0];
+      // If a name-similar resort already exists near this OSM area, the roster
+      // name just differed from the DB name (Tamarack vs "Tamarack Resort") —
+      // attach the membership there instead of inserting a duplicate.
+      const { rows: existing } = await pool.query(
+        `SELECT id, name FROM resorts WHERE
+           2*6371*asin(sqrt( power(sin(radians(lat - $1)/2),2) +
+             cos(radians($1))*cos(radians(lat))*power(sin(radians(lng - $2)/2),2) )) <= 40`,
+        [a.point.lat, a.point.lng]);
+      const near = existing.find((e) => similar(e.name, a.name) || similar(e.name, u.name));
+      if (near) {
+        await pool.query(
+          `INSERT INTO pass_resorts (pass_id, resort_id, access, days_limit)
+           VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
+          [u.passId, near.id, u.entry.access, u.entry.days_limit]);
+        discovered++;
+        continue;
+      }
+      let slug = slugify(a.name);
+      const { rows: [taken] } = await pool.query('SELECT 1 FROM resorts WHERE slug = $1', [slug]);
+      if (taken) slug = slugify(`${a.name}-${a.region || a.country || 'osm'}`);
+      const { rows: [row] } = await pool.query(
+        `INSERT INTO resorts (slug, name, country, region, lat, lng, summit_elev_m, base_elev_m,
+           vertical_m, lifts_total, runs_total, pct_beginner, pct_intermediate, pct_expert, openskimap_id)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+         ON CONFLICT (slug) DO NOTHING RETURNING id`,
+        [slug, a.name, a.country || 'Unknown', a.region, a.point.lat, a.point.lng,
+         a.stats.summit_elev_m, a.stats.base_elev_m, a.stats.vertical_m, a.stats.lifts_total,
+         a.stats.runs_total, a.stats.pct_beginner, a.stats.pct_intermediate, a.stats.pct_expert, a.id]);
+      if (!row) { stillUnmatched.push(u); continue; }
+      await pool.query(
+        `INSERT INTO pass_resorts (pass_id, resort_id, access, days_limit)
+         VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
+        [u.passId, row.id, u.entry.access, u.entry.days_limit]);
+      discovered++;
+    }
+    console.log(`Discovered ${discovered} roster resorts from OpenSkiMap (missing from the skeleton)`);
+  } else {
+    stillUnmatched.push(...unmatched);
+    console.log('No cached ski_areas.geojson; skipping roster-driven discovery');
+  }
+
   fs.mkdirSync(DATA_DIR, { recursive: true });
   const file = path.join(DATA_DIR, 'unmatched-roster.csv');
   fs.writeFileSync(
     file,
-    'pass,roster_name,reason\n' + unmatched.map((u) => `"${u.pass}","${u.name}","${u.reason}"`).join('\n') + '\n');
-  console.log(`${unmatched.length} unmatched roster rows → ${file}`);
+    'pass,roster_name,reason\n' + stillUnmatched.map((u) => `"${u.pass}","${u.name}","${u.reason}"`).join('\n') + '\n');
+  console.log(`${stillUnmatched.length} unmatched roster rows → ${file}`);
   await pool.end();
 }
 
